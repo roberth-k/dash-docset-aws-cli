@@ -65,20 +65,6 @@ def build_guides_index(basedir, filename):
 
     return index
 
-#
-# def build_envvars_index(basedir):
-#     index = []  # tuples (name, type, link)
-#     filename = 'topic/config-vars.html'
-#     print(f'parse environment variables from {filename}')
-#
-#     with open(join(basedir, filename)) as fp:
-#         soup = BeautifulSoup(fp, 'html5lib')
-#
-#     for table in soup.find_all('table'):
-#         for cell in table.find_all(string=re.compile('^AWS_[A-Z_]+$')):
-#             name = cell.string
-#             link = join(dirname(filename), )
-#
 
 def write_db(index, db_path):
     print(f'write index to {db_path}')
