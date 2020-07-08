@@ -1,3 +1,5 @@
+SHELL = /usr/bin/env bash
+
 STATIC_RESOURCES := Contents/Info.plist icon.png icon@2x.png
 .SECONDARY:
 
