@@ -18,22 +18,15 @@ jobs:
         run: |
           version="${GITHUB_REF##*/}"
           echo ::set-output "name=version::$version"
-
-          git clone --depth 1 --branch "$version" https://github.com/aws/aws-cli.git ~/aws-cli
-          cd ~/aws-cli
-          pip install -r requirements.txt -r requirements-docs.txt
-          python setup.py install
+          make ".build/$version/aws-cli"
       - name: build the latest AWS CLI v2 documentation
         run: |
-          cd ~/aws-cli/doc
-          make html
+          version="${{ steps.awscli.outputs.version }}"
+          make ".build/$version/aws-cli/doc/build/html"
       - name: build the docset
         run: |
-          cd "$GITHUB_WORKSPACE"
-          pip install -r requirements.txt
-          ./scripts/create-docset.sh ~/aws-cli
-          cd .build
-          tar --exclude='.DS_Store' -czf AWS-CLI-v2.tgz AWS-CLI-v2.docset
+          version="${{ steps.awscli.outputs.version }}"
+          make ".build/$version/AWS-CLI-v2.tgz"
       - uses: actions/create-release@v1
         id: create_release
         env:
@@ -48,6 +41,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .build/AWS-CLI-v2.tgz
+          asset_path: .build/${{ steps.awscli.outputs.version }}/AWS-CLI-v2.tgz
           asset_name: AWS-CLI-v2.tgz
           asset_content_type: application/gzip

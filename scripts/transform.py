@@ -23,6 +23,7 @@ def main():
     html_files = (
         glob(path.join(doc_path, 'reference/**/*.html')) +
         glob(path.join(doc_path, 'topic/**/*.html')))
+    assert html_files, 'no transformable files found'
 
     with Pool() as pool:
         pool.imap_unordered(transform_one, html_files)

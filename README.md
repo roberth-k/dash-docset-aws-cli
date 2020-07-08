@@ -10,3 +10,13 @@ Instructions for building Dash docsets are available on the [Dash website](https
 The official version of this documentation is hosted [here](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/index.html).
 
 ![Screenshot](static/screenshot.png)
+
+# Building
+
+```bash
+$ make .build/2.0.29/AWS-CLI-v2.tgz
+```
+
+Replace 2.0.29 with a version of AWS CLI v2. 
+
+The docset will be available at `.build/2.0.29/AWS-CLI-v2.docset`.
