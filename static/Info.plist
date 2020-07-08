@@ -17,6 +17,9 @@
 	<key>DashDocSetFamily</key>
 	<string>dashtoc</string>
 
+	<key>DashDocSetFallbackURL</key>
+	<string>https://awscli.amazonaws.com/v2/documentation/api/latest/</string>
+
 	<key>isDashDocset</key>
 	<true/>
 </dict>

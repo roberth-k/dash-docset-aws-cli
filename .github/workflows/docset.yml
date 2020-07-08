@@ -1,0 +1,53 @@
+name: Build and Release Docset
+on:
+  push:
+    tags:
+      - 2.*
+
+jobs:
+  build_docset:
+    name: Build and Release Docset
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: pull AWS CLI v2 documentation
+        id: awscli
+        run: |
+          version="${GITHUB_REF##*/}"
+          echo ::set-output "name=version::$version"
+
+          git clone --depth 1 --branch "$version" https://github.com/aws/aws-cli.git ~/aws-cli
+          cd ~/aws-cli
+          pip install -r requirements.txt -r requirements-docs.txt
+          python setup.py install
+      - name: build the latest AWS CLI v2 documentation
+        run: |
+          cd ~/aws-cli/doc
+          make html
+      - name: build the docset
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          pip install -r requirements.txt
+          ./scripts/create-docset.sh ~/aws-cli
+          cd .build
+          tar --exclude='.DS_Store' -czf AWS-CLI-v2.tgz AWS-CLI-v2.docset
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.awscli.outputs.version }}
+          release_name: ${{ steps.awscli.outputs.version }}
+          body: |
+            Docset built from [aws/aws-cli@${{ steps.awscli.outputs.version }}](https://github.com/aws/aws-cli/tree/${{ steps.awscli.outputs.version }}).
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .build/AWS-CLI-v2.tgz
+          asset_name: AWS-CLI-v2.tgz
+          asset_content_type: application/gzip

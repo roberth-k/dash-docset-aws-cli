@@ -1,0 +1,42 @@
+name: Track latest AWS CLI v2 release
+on:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  default:
+    name: Track latest AWS CLI v2 release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: get the latest AWS CLI v2 release
+        id: awscli
+        run: |
+          version=$( \
+            curl -s https://api.github.com/repos/aws/aws-cli/tags?per_page=20 | \
+            jq '[.[] | select(.name | startswith("2.")) | .name][0]' -r)
+
+          echo ::set-output "name=version::$version"
+
+      - name: get current .version
+        id: current
+        run: |
+          echo ::set-output "name=version::$(cat .version)"
+
+      - name: update .version and push tag
+        if: ${{ steps.awscli.outputs.version != steps.current.outputs.version }}
+        run: |
+          git config --global user.email "${{ secrets.CI_USER_EMAIL }}"
+          git config --global user.name  "${{ secrets.CI_USER_NAME }}"
+
+          printf "${{ steps.awscli.outputs.version }}\n" > .version
+          git add .version
+          git commit -m "aws/aws-cli@${{ steps.awscli.outputs.version }}"
+          git tag ${{ steps.awscli.outputs.version }}
+          git push \
+            "https://${{ secrets.CI_USER_USERNAME }}:${{ secrets.CI_USER_ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" \
+            HEAD:master \
+            --tags

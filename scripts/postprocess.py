@@ -75,6 +75,16 @@ def transform(fp) -> BeautifulSoup:
     body_div = soup.find('div', attrs={'class': 'body'})
     body_div['style'] = body_div.get('style', []) + ['width: 100%']
 
+    # override title (drop the initial "aws" prefix)
+    breadcrumbs = [
+        span.string
+        for span in soup.select('div.body > p:first-child a span')]
+    if len(breadcrumbs) > 0 and breadcrumbs[0] == 'aws':
+        breadcrumbs = breadcrumbs[1:]
+    title = soup.find('title')
+    breadcrumbs.append(title.string.split('—')[0].strip())
+    title.string = ' '.join(breadcrumbs)
+
     return soup
 
 
