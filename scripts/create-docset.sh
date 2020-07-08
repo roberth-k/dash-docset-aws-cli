@@ -19,8 +19,9 @@ cd "$projdir"
 
 mkdir -p "$docsetdir/Contents/Resources"
 
-cp "static/Info.plist" "$docsetdir/Contents/"
-cp "static/icon.png"   "$docsetdir/"
+cp "static/Info.plist"  "$docsetdir/Contents/"
+cp "static/icon.png"    "$docsetdir/"
+cp "static/icon@2x.png" "$docsetdir/"
 
 cp -r "$docpath" "$docsetdir/Contents/Resources/Documents"
 
