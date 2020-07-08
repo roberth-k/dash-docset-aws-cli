@@ -5,21 +5,21 @@ STATIC_RESOURCES := Contents/Info.plist icon.png icon@2x.png
 # Publishing
 #
 
-.build/%/AWS-CLI-v2.tgz: .build/%/AWS-CLI-v2.docset/.done
+.build/%/AWS-CLI.tgz: .build/%/AWS-CLI.docset/.done
 	cd "$(dir $@)" && \
-		tar --exclude='.DS_Store' -czf AWS-CLI-v2.tgz AWS-CLI-v2.docset
+		tar --exclude='.DS_Store' -czf AWS-CLI.tgz AWS-CLI.docset
 
 #
 # Docset
 #
 
-.build/%/AWS-CLI-v2.docset/.done: \
-		.build/%/AWS-CLI-v2.docset/Contents/Resources/Documents \
-		.build/%/AWS-CLI-v2.docset/Contents/Resources/docSet.dsidx \
-		$(addprefix .build/%/AWS-CLI-v2.docset/,$(STATIC_RESOURCES))
+.build/%/AWS-CLI.docset/.done: \
+		.build/%/AWS-CLI.docset/Contents/Resources/Documents \
+		.build/%/AWS-CLI.docset/Contents/Resources/docSet.dsidx \
+		$(addprefix .build/%/AWS-CLI.docset/,$(STATIC_RESOURCES))
 	touch "$@"
 
-.build/%/AWS-CLI-v2.docset/Contents/Resources/Documents: \
+.build/%/AWS-CLI.docset/Contents/Resources/Documents: \
 		.build/%/aws-cli/doc/build/html \
 		.build/%/.venv
 	mkdir -p "$(dir $@)"
@@ -30,7 +30,7 @@ STATIC_RESOURCES := Contents/Info.plist icon.png icon@2x.png
 		./scripts/transform.py "$$tmp/html" && \
 		mv "$$tmp/html" "$@"
 
-.build/%/AWS-CLI-v2.docset/Contents/Resources/docSet.dsidx: \
+.build/%/AWS-CLI.docset/Contents/Resources/docSet.dsidx: \
 		.build/%/aws-cli/doc/build/html \
 		.build/%/.venv
 	mkdir -p "$(dir $@)"
@@ -38,15 +38,15 @@ STATIC_RESOURCES := Contents/Info.plist icon.png icon@2x.png
 		source ".build/$*/.venv/bin/activate" && \
 		./scripts/index.py ".build/$*/aws-cli/doc/build/html" "$@"
 
-.build/%/AWS-CLI-v2.docset/Contents/Info.plist: static/Info.plist
+.build/%/AWS-CLI.docset/Contents/Info.plist: static/Info.plist
 	mkdir -p "$(dir $@)"
 	cp "static/$(notdir $@)" "$@"
 
-.build/%/AWS-CLI-v2.docset/icon.png: static/icon.png
+.build/%/AWS-CLI.docset/icon.png: static/icon.png
 	mkdir -p "$(dir $@)"
 	cp "static/$(notdir $@)" "$@"
 
-.build/%/AWS-CLI-v2.docset/icon@2x.png: static/icon@2x.png
+.build/%/AWS-CLI.docset/icon@2x.png: static/icon@2x.png
 	mkdir -p "$(dir $@)"
 	cp "static/$(notdir $@)" "$@"
 

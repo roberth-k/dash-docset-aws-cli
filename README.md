@@ -1,7 +1,7 @@
-dash-docset-aws-cli-v2
-======================
+dash-docset-aws-cli
+===================
 
-_AWS-CLI-v2.docset for Dash_
+_AWS-CLI.docset for Dash_
 
 Generated from [AWS CLI](https://github.com/aws/aws-cli) documentation (v2 branch).
 
@@ -14,9 +14,9 @@ The official version of this documentation is hosted [here](https://awscli.amazo
 # Building
 
 ```bash
-$ make .build/2.0.29/AWS-CLI-v2.tgz
+$ make .build/2.0.29/AWS-CLI.tgz
 ```
 
 Replace 2.0.29 with a version of AWS CLI v2. 
 
-The docset will be available at `.build/2.0.29/AWS-CLI-v2.docset`.
+The docset will be available at `.build/2.0.29/AWS-CLI.docset`.
