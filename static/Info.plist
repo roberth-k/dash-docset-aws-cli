@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>aws-cli-v2</string>
+	<string>aws-cli</string>
 
 	<key>CFBundleName</key>
-	<string>AWS CLI v2</string>
+	<string>AWS CLI</string>
 
 	<key>DocSetPlatformFamily</key>
-	<string>aws-cli-v2</string>
+	<string>aws-cli</string>
 
 	<key>dashIndexFilePath</key>
 	<string>reference/index.html</string>
