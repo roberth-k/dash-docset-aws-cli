@@ -1,7 +1,9 @@
 dash-docset-aws-cli
 ===================
 
-_AWS-CLI.docset for Dash_
+_AWS-CLI.docset for the [Dash](https://kapeli.com/dash) documentation browser._
+
+This docset is available as a User-Contributed Docset. Download it from Dash directly.
 
 Generated from [AWS CLI](https://github.com/aws/aws-cli) documentation (v2 branch).
 
