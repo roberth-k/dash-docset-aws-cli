@@ -34,6 +34,7 @@ jobs:
         with:
           tag_name: ${{ steps.awscli.outputs.version }}
           release_name: ${{ steps.awscli.outputs.version }}
+          draft: true
           body: |
             Docset built from [aws/aws-cli@${{ steps.awscli.outputs.version }}](https://github.com/aws/aws-cli/tree/${{ steps.awscli.outputs.version }}).
       - uses: actions/upload-release-asset@v1
@@ -44,3 +45,12 @@ jobs:
           asset_path: .build/${{ steps.awscli.outputs.version }}/AWS-CLI.tgz
           asset_name: AWS-CLI.tgz
           asset_content_type: application/gzip
+      - name: publish draft release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create_release.outputs.id }}" \
+            -XPATCH \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"draft": false}'
