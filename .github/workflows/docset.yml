@@ -50,7 +50,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl \
+            --show-error --fail \
             "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create_release.outputs.id }}" \
             -XPATCH \
             -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
             -d '{"draft": false}'
