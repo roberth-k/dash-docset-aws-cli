@@ -15,7 +15,7 @@ readonly artefact_url=$(echo "$release" | jq -r ".assets[0].browser_download_url
 curl -sfL -o "$artefact" "$artefact_url"
 
 git clone \
-	--depth 1 \
+	--depth 10 \
 	--branch master \
 	https://github.com/Kapeli/Dash-User-Contributions.git \
 	"$repo"
