@@ -3,9 +3,13 @@ set -euo pipefail
 
 readonly repo=$(mktemp -d)
 readonly artefact=$(mktemp)
-readonly tag="${GITHUB_REF##*/}"
 
-readonly release=$(curl -fs "${GITHUB_API}/repos/${GITHUB_REPOSITORY}/releases/tags/$tag")
+tag="${GITHUB_REF##*/}"
+if [[ "$tag" == "master" ]]; then
+  tag="2.0.31"  # xxx
+fi
+
+readonly release=$(curl -fs "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/tags/$tag")
 readonly artefact_url=$(echo "$release" | jq -r ".assets[0].browser_download_url")
 
 curl -sfL -o "$artefact" "$artefact_url"
@@ -52,5 +56,5 @@ git add -A
 git commit -m "AWS-CLI.docset $tag"
 
 git push \
-	"https://${CI_USER_USERNAME}:${CI_USER_ACCESS_TOKEN}@github.com/roberth-k/Dash-User-Contributions".git \
+	"https://${CI_USER_USERNAME}:${CI_USER_ACCESS_TOKEN}@github.com/roberth-k/Dash-User-Contributions.git" \
 	"HEAD:$branch_name"
