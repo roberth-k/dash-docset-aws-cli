@@ -3,11 +3,7 @@ set -euo pipefail
 
 readonly repo=$(mktemp -d)
 readonly artefact=$(mktemp)
-
-tag="${GITHUB_REF##*/}"
-if [[ "$tag" == "master" ]]; then
-  tag="2.0.31"  # xxx
-fi
+readonly tag="${GITHUB_REF##*/}"
 
 readonly release=$(curl -fs "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/tags/$tag")
 readonly artefact_url=$(echo "$release" | jq -r ".assets[0].browser_download_url")
