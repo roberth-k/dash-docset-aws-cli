@@ -20,6 +20,7 @@ def main():
     )
 
     index.extend(main_index)
+    index.extend(build_config_vars_index())
 
     for name, _, path in main_index:
         if not path.endswith('index.html'):
@@ -64,6 +65,35 @@ def build_guides_index(basedir, filename):
         print(f'add guide {link}')
 
     return index
+
+
+def build_config_vars_index():
+    # these were copied manually from the config page
+    vars = [
+        'AWS_PROFILE',
+        'AWS_DEFAULT_REGION',
+        'AWS_DEFAULT_OUTPUT',
+        'AWS_CA_BUNDLE',
+        'AWS_MAX_ATTEMPTS',
+        'AWS_RETRY_MODE',
+        'AWS_CONFIG_FILE',
+        'AWS_ACCESS_KEY_ID',
+        'AWS_SECRET_ACCESS_KEY',
+        'AWS_SESSION_TOKEN',
+        'AWS_METADATA_SERVICE_TIMEOUT',
+        'AWS_METADATA_SERVICE_NUM_ATTEMPTS',
+        'AWS_SHARED_CREDENTIALS_FILE',
+        'AWS_ROLE_ARN',
+        'AWS_WEB_IDENTITY_TOKEN_FILE',
+        'AWS_ROLE_SESSION_NAME',
+        'AWS_CLI_FILE_ENCODING',
+    ]
+
+    # tuples (name, type, link)
+    return [
+        (var, 'Environment', 'topic/config-vars.html#'+var)
+        for var in vars
+    ]
 
 
 def write_db(index, db_path):

@@ -8,6 +8,7 @@ WARNING: All HTML sources will be overwritten.
 from bs4 import BeautifulSoup
 from glob2 import glob
 from multiprocessing.pool import Pool
+import re
 import sys
 from os import path
 from urllib.parse import quote as url_quote
@@ -15,7 +16,9 @@ from urllib.parse import quote as url_quote
 
 def main():
     if len(sys.argv) < 2:
-        soup = transform(str(sys.stdin.read()))
+        soup = BeautifulSoup(str(sys.stdin.read()))
+        transform(soup)
+        transform_config_vars(soup)
         print(soup.prettify())
         return
 
@@ -35,15 +38,18 @@ def transform_one(html_file):
     print(f'process {html_file}...')
 
     with open(html_file) as fp:
-        soup = transform(fp)
+        soup = BeautifulSoup(fp, 'html5lib')
+
+    transform(soup)
+
+    if html_file.endswith('topic/config-vars.html'):
+        transform_config_vars(soup)
 
     with open(html_file, 'w') as fp:
         fp.write(str(soup))
 
 
-def transform(fp) -> BeautifulSoup:
-    soup = BeautifulSoup(fp, 'html5lib')
-
+def transform(soup: BeautifulSoup):
     # create section anchors
     for tag in soup.find_all('a', attrs={'class': 'headerlink'}):
         if tag.parent.name == 'h1':
@@ -86,7 +92,22 @@ def transform(fp) -> BeautifulSoup:
     breadcrumbs.append(title.string.split('—')[0].strip())
     title.string = ' '.join(breadcrumbs)
 
-    return soup
+
+def transform_config_vars(soup: BeautifulSoup):
+    # link the first occurrence of each variable
+    # manually maintain the set to ensure ordering
+    visited = set()
+    for tag in soup.find_all(string=re.compile('^AWS_[A-Z_]+$')):
+        if tag.string in visited:
+            continue
+        else:
+            visited.add(tag.string)
+
+        anchor = soup.new_tag('a')
+        anchor['id'] = tag.string  # anchor from index
+        anchor['name'] = '//apple_ref/cpp/Environment/' + url_quote(tag.string)
+        anchor['class'] = ['dashAnchor']
+        tag.insert_before(anchor)
 
 
 if __name__ == '__main__':
