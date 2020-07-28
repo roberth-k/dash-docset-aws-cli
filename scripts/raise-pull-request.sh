@@ -15,6 +15,6 @@ curl \
             \"title\": \"aws-cli $tag\",
             \"head\": \"roberth-k:aws-cli-$tag\",
             \"base\": \"master\",
-            \"body\": \"This is an automatic PR. Please report issues to https://github.com/roberth-k/dash-docset-aws-cli.\"
+            \"body\": \"This is an automated PR. Please report issues to https://github.com/roberth-k/dash-docset-aws-cli.\"
         }
     "
