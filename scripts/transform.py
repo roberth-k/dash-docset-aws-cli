@@ -5,7 +5,9 @@ Post-process files in the AWS CLI v2 documentation in HTML-compiled form.
 
 WARNING: All HTML sources will be overwritten.
 """
-from bs4 import BeautifulSoup
+import itertools
+
+from bs4 import BeautifulSoup, ResultSet
 from glob2 import glob
 from multiprocessing.pool import Pool
 import re
@@ -58,15 +60,27 @@ def transform(soup: BeautifulSoup):
         tag['name'] = '//apple_ref/cpp/Section/' + url_quote(tag.parent.contents[0])
         tag['class'] += ['dashAnchor']
 
+    def select_section(section: str, rest: str):
+        """
+        At some point, the AWS CLI documentation started using <span id="section">
+        instead of <div class="section" id="section">. This helper provides
+        support for both at the same time.
+        """
+
+        return itertools.chain(
+            soup.select(f'div.section#{section} {rest}'),
+            soup.select(f'section#{section} {rest}'),
+        )
+
     # create option anchors
-    for span in soup.select('div.section#options > p > code.docutils.literal:first-child > span'):
+    for span in select_section('options', '> p > code.docutils.literal:first-child > span'):
         anchor = soup.new_tag('a')
         anchor['name'] = '//apple_ref/cpp/Option/' + url_quote(span.string)
         anchor['class'] = ['dashAnchor']
         span.insert_before(anchor)
 
     # create example anchors
-    for strong in soup.select('div.section#examples > p > strong:first-child'):
+    for strong in select_section('examples', '> p > strong:first-child'):
         anchor = soup.new_tag('a')
         anchor['name'] = '//apple_ref/cpp/Guide/' + url_quote(strong.string)
         anchor['class'] = ['dashAnchor']
