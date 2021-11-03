@@ -66,6 +66,7 @@ STATIC_RESOURCES := Contents/Info.plist icon.png icon@2x.png
 		python3 -m venv .venv && \
 		source .venv/bin/activate && \
 		pip install -r requirements.txt -r requirements-docs.txt && \
+		pip install 'docutils<0.18' && \
 		python setup.py install && \
 		cd doc && \
 		make html
