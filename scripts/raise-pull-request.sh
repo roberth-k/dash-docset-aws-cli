@@ -12,7 +12,7 @@ curl \
     -H "Content-Type: application/json" \
     -d "
         {
-            \"title\": \"aws-cli $tag\",
+            \"title\": \"AWS-CLI $tag\",
             \"head\": \"roberth-k:aws-cli-$tag\",
             \"base\": \"master\",
             \"body\": \"This is an automated PR. Please report issues to https://github.com/roberth-k/dash-docset-aws-cli.\"
